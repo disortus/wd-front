@@ -3,33 +3,45 @@ export default function ProductCard({ product }) {
   return (
 
     <div className="
+
       border
+
+      border-border
+
       rounded-2xl
 
       p-4
 
-      hover:shadow-sm
+      bg-white
+
+      shadow-card
+
+      hover:shadow-md
+
       transition
+
     ">
 
-      {/* изображение */}
-
       <div className="
-        bg-gray-100
+
+        bg-surface
 
         h-40
 
         rounded-xl
+
       " />
 
 
 
-      {/* название */}
-
       <h3 className="
+
         mt-4
 
         text-sm
+
+        font-medium
+
       ">
 
         {product.title}
@@ -38,13 +50,14 @@ export default function ProductCard({ product }) {
 
 
 
-      {/* цена */}
-
       <p className="
+
         mt-1
 
         text-sm
-        font-medium
+
+        text-secondary
+
       ">
 
         {product.price} ₸
@@ -53,9 +66,8 @@ export default function ProductCard({ product }) {
 
 
 
-      {/* кнопка */}
-
       <button className="
+
         mt-3
 
         w-full
@@ -64,19 +76,19 @@ export default function ProductCard({ product }) {
 
         rounded-xl
 
-        bg-black
-        text-white
+        border
 
         text-sm
 
-        hover:bg-neutral-800
+        hover:bg-surface
+
         transition
+
       ">
 
         В корзину
 
       </button>
-
 
     </div>
 

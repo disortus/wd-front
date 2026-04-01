@@ -8,13 +8,61 @@ export default function ProfilePage() {
     <Container>
 
       {/* header */}
+<div className="
 
-      <div className="
-        mt-10
-        flex
-        items-center
-        gap-4
-      ">
+  mt-10
+
+  flex
+
+  items-center
+
+  gap-4
+
+">
+
+  <div className="
+
+    w-16
+
+    h-16
+
+    rounded-full
+
+    bg-surface
+
+  " />
+
+
+  <div>
+
+    <p className="
+
+      font-medium
+
+      text-base
+
+    ">
+
+      Erbol Zh
+
+    </p>
+
+
+    <p className="
+
+      text-sm
+
+      text-secondary
+
+    ">
+
+      erbol@mail.com
+
+    </p>
+
+  </div>
+
+</div>
 
         {/* avatar */}
 
@@ -53,7 +101,6 @@ export default function ProfilePage() {
 
         </div>
 
-      </div>
 
 
 

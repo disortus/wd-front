@@ -1,56 +1,79 @@
+import Container from "./Container"
+
 export default function Categories() {
 
-  const items = [
+  const categories = [
+
     "Все",
+
     "Наушники",
+
     "Часы",
+
     "Чехлы",
+
     "Зарядки",
+
   ]
+
 
   return (
 
-    <section>
+    <section className="pb-8">
 
-      <div className="
-        max-w-6xl
-        mx-auto
-        px-4
+      <Container>
 
-        flex
-        gap-2
-        overflow-x-auto
+        <div className="
 
-        pb-4
-      ">
+          flex
 
-        {items.map(item => (
+          gap-2
 
-          <button
+          overflow-x-auto
 
-            key={item}
+          pb-2
 
-            className="
-              px-4
-              h-9
+        ">
 
-              border
+          {categories.map(cat => (
 
-              rounded-full
+            <button
 
-              text-sm
+              key={cat}
 
-              whitespace-nowrap
-            "
-          >
+              className="
 
-            {item}
+                h-9
 
-          </button>
+                px-4
 
-        ))}
+                border
 
-      </div>
+                border-border
+
+                rounded-full
+
+                text-sm
+
+                whitespace-nowrap
+
+                hover:bg-surface
+
+                transition
+
+              "
+
+            >
+
+              {cat}
+
+            </button>
+
+          ))}
+
+        </div>
+
+      </Container>
 
     </section>
 

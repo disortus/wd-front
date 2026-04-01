@@ -1,13 +1,19 @@
 export default function Container({ children }) {
+
   return (
 
     <div className="
-      max-w-6xl
+
+      max-w-container
+
       mx-auto
 
       px-4
+
       md:px-6
+
       lg:px-8
+
     ">
 
       {children}
@@ -15,4 +21,5 @@ export default function Container({ children }) {
     </div>
 
   )
+
 }

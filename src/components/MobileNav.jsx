@@ -24,6 +24,7 @@ export default function MobileNav() {
       md:hidden
 
       z-50
+      bg-white/90 backdrop-blur
     ">
 
       <Item

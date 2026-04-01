@@ -1,84 +1,126 @@
+import Container from "./Container"
+
 export default function Hero() {
 
   return (
 
     <section className="
+
       py-12
+
       md:py-20
+
     ">
 
-      <div className="
-        max-w-6xl
-        mx-auto
-        px-4
+      <Container>
 
-        grid
-        gap-8
+        <div className="
 
-        md:grid-cols-2
-        md:items-center
-      ">
+          grid
 
-        <div>
+          gap-10
 
-          <h1 className="
-            text-3xl
-            md:text-5xl
+          md:grid-cols-2
 
-            font-semibold
-            leading-tight
-          ">
+          md:items-center
 
-            Абсолютная
-            точность.
-            Безупречный звук.
+        ">
 
-          </h1>
+          <div>
 
+            <h1 className="
 
-          <p className="
-            mt-4
-            text-gray-500
-          ">
+              text-3xl
 
-            AirPods Pro обеспечивают
-            кристально чистое звучание
-            и комфорт в течение дня.
+              md:text-5xl
 
-          </p>
+              font-semibold
+
+              leading-tight
+
+              tracking-tight
+
+            ">
+
+              Абсолютная точность.
+
+              Безупречный звук.
+
+            </h1>
 
 
-          <button className="
-            mt-6
 
-            bg-black
-            text-white
+            <p className="
 
-            px-6
-            h-11
+              mt-4
 
-            rounded-xl
+              text-secondary
 
-            text-sm
-          ">
+              max-w-md
 
-            Смотреть
+            ">
 
-          </button>
+              AirPods Pro обеспечивают
+
+              чистое звучание и комфорт
+
+              на протяжении всего дня.
+
+            </p>
+
+
+
+            <button className="
+
+              mt-6
+
+              h-11
+
+              px-6
+
+              bg-primary
+
+              text-white
+
+              rounded-xl
+
+              text-sm
+
+              font-medium
+
+              hover:opacity-90
+
+              transition
+
+            ">
+
+              Смотреть
+
+            </button>
+
+
+
+          </div>
+
+
+
+          <div className="
+
+            bg-surface
+
+            rounded-2xl
+
+            h-56
+
+            md:h-80
+
+            shadow-card
+
+          " />
 
         </div>
 
-
-        <div className="
-          bg-gray-100
-
-          rounded-2xl
-
-          h-64
-          md:h-80
-        " />
-
-      </div>
+      </Container>
 
     </section>
 

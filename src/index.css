@@ -1,7 +1,32 @@
+@import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
+
 body {
-  @apply bg-white text-[#111];
+
+  background: white;
+
+  color: #111;
+
+  font-family: system-ui, sans-serif;
+
+}
+
+
+
+button {
+
+  cursor: pointer;
+
+}
+
+
+
+input {
+
+  outline: none;
+
 }
