@@ -1,27 +1,13 @@
-import Container from "../components/ui/Container";
-import RegisterForm from "../features/auth/components/RegisterForm";
-
 export default function RegisterPage() {
+
   return (
-    <section className="py-16">
 
-      <Container>
+    <div>
 
-        <h1 className="
-          text-2xl
-          font-semibold
-        ">
-          Create account
-        </h1>
+      Регистрация
 
-        <div className="mt-8 max-w-md">
+    </div>
 
-          <RegisterForm />
+  )
 
-        </div>
-
-      </Container>
-
-    </section>
-  );
 }
