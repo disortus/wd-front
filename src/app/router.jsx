@@ -4,7 +4,7 @@ import MainLayout from "../components/layout/MainLayout"
 
 import HomePage from "../pages/HomePage"
 import RegisterPage from "../pages/RegisterPage"
-import ProfilePage from "../pages/ProfilePage"
+// import ProfilePage from "../pages/ProfilePage"
 
 export const router = createBrowserRouter([
   {
@@ -21,10 +21,10 @@ export const router = createBrowserRouter([
         element: <RegisterPage />,
       },
 
-      {
-        path: "/profile",
-        element: <ProfilePage />,
-      },
+      // {
+      //   path: "/profile",
+      //   element: <ProfilePage />,
+      // },
 
     ],
   },
