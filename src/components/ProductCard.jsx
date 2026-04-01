@@ -1,14 +1,18 @@
-export default function ProductCard() {
+export default function ProductCard({ product }) {
 
   return (
 
     <div className="
       border
-
       rounded-2xl
 
       p-4
+
+      hover:shadow-sm
+      transition
     ">
+
+      {/* изображение */}
 
       <div className="
         bg-gray-100
@@ -18,12 +22,23 @@ export default function ProductCard() {
         rounded-xl
       " />
 
+
+
+      {/* название */}
+
       <h3 className="
         mt-4
+
         text-sm
       ">
-        AirPods Pro 2
+
+        {product.title}
+
       </h3>
+
+
+
+      {/* цена */}
 
       <p className="
         mt-1
@@ -32,10 +47,13 @@ export default function ProductCard() {
         font-medium
       ">
 
-        3 990 ₽
+        {product.price} ₸
 
       </p>
 
+
+
+      {/* кнопка */}
 
       <button className="
         mt-3
@@ -44,17 +62,21 @@ export default function ProductCard() {
 
         h-9
 
+        rounded-xl
+
         bg-black
         text-white
 
-        rounded-xl
-
         text-sm
+
+        hover:bg-neutral-800
+        transition
       ">
 
         В корзину
 
       </button>
+
 
     </div>
 
