@@ -1,5 +1,5 @@
-import Container from "../components/Container"
 import Hero from "../components/Hero"
+import Categories from "../components/Categories"
 
 export default function HomePage() {
 
@@ -8,6 +8,8 @@ export default function HomePage() {
     <div>
 
       <Hero />
+
+      <Categories />
 
     </div>
 

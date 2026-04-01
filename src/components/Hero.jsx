@@ -1,14 +1,11 @@
-import Container from "./Container"
+import Container from "./Container";
 
 export default function Hero() {
-
   return (
-
     <section className="py-10 md:py-16">
-
       <Container>
-
-        <div className="
+        <div
+          className="
 
           grid
           gap-8
@@ -16,66 +13,60 @@ export default function Hero() {
           md:grid-cols-2
           md:items-center
 
-        ">
-
+        "
+        >
           {/* текст */}
 
           <div>
-
-            <h1 className="
+            <h1
+              className="
               text-3xl
               md:text-5xl
 
               font-semibold
 
               leading-tight
-            ">
-
-              Абсолютная точность.
-              Безупречный звук.
-
+            "
+            >
+              Абсолютная точность. Безупречный звук.
             </h1>
 
-
-            <p className="
+            <p
+              className="
               mt-4
 
               text-gray-500
-            ">
-
-              AirPods Pro обеспечивают
-              чистое звучание и комфорт
-              на протяжении всего дня.
-
+            "
+            >
+              AirPods Pro обеспечивают чистое звучание и комфорт на протяжении
+              всего дня.
             </p>
 
-
             <button className="
-              mt-6
+            mt-6
 
-              h-11
+            h-11
+            px-6
 
-              px-6
+            bg-black
+            text-white
 
-              bg-black
-              text-white
+            rounded-xl
 
-              rounded-xl
+            text-sm
+            font-medium
 
-              text-sm
+            hover:bg-neutral-800
+            transition
             ">
-
               Смотреть
-
             </button>
-
           </div>
-
-
 
           {/* изображение */}
 
-          <div className="
+          <div
+            className="
 
             bg-gray-100
 
@@ -84,14 +75,10 @@ export default function Hero() {
             h-56
             md:h-80
 
-          " />
-
+          "
+          />
         </div>
-
       </Container>
-
     </section>
-
-  )
-
+  );
 }
