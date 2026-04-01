@@ -1,6 +1,6 @@
 import Container from "../components/Container"
 import Input from "../components/Input"
-
+import { useAuthStore } from "../store/authStore"
 import { useForm } from "react-hook-form"
 
 export default function LoginPage() {
@@ -15,12 +15,14 @@ export default function LoginPage() {
 
   } = useForm()
 
+  const loginUser = useAuthStore(state => state.login)
+  const isLoading = useAuthStore(state => state.isLoading)
 
-  function onSubmit(data) {
+async function onSubmit(data) {
 
-    console.log("login", data)
+  await loginUser(data)
 
-  }
+}
 
 
   return (
@@ -94,7 +96,7 @@ export default function LoginPage() {
 
 
           <button
-
+            disabled={isLoading}
             className="
               w-full
 
@@ -113,7 +115,7 @@ export default function LoginPage() {
             "
 
           >
-
+            {isLoading ? "Loading..." : "Login"}
             Login
 
           </button>

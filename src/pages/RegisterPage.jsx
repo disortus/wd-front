@@ -1,6 +1,6 @@
 import Container from "../components/Container"
 import Input from "../components/Input"
-
+import { useAuthStore } from "../store/authStore"
 import { useForm } from "react-hook-form"
 
 export default function RegisterPage() {
@@ -15,12 +15,14 @@ export default function RegisterPage() {
 
   } = useForm()
 
+const registerUser = useAuthStore(state => state.register)
+const isLoading = useAuthStore(state => state.isLoading)
 
-  function onSubmit(data) {
+async function onSubmit(data) {
 
-    console.log(data)
+  await registerUser(data)
 
-  }
+}
 
 
   return (
@@ -120,7 +122,7 @@ export default function RegisterPage() {
 
 
           <button
-
+            disabled={isLoading}
             className="
               w-full
 
@@ -139,7 +141,7 @@ export default function RegisterPage() {
             "
 
           >
-
+            {isLoading ? "Loading..." : "Register"}
             Register
 
           </button>

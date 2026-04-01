@@ -1,7 +1,10 @@
 import Container from "../components/Container"
 import ProfileMenuItem from "../components/ProfileMenuItem"
+import { useAuthStore } from "../store/authStore"
 
 export default function ProfilePage() {
+
+    const user = useAuthStore(state => state.user)
 
   return (
 
@@ -43,7 +46,7 @@ export default function ProfilePage() {
 
     ">
 
-      Erbol Zh
+      {user?.name}
 
     </p>
 
@@ -56,7 +59,7 @@ export default function ProfilePage() {
 
     ">
 
-      erbol@mail.com
+      {user?.email}
 
     </p>
 
@@ -138,7 +141,6 @@ export default function ProfilePage() {
         <ProfileMenuItem>
           FAQ
         </ProfileMenuItem>
-
 
       </div>
 
