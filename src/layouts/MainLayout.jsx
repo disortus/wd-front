@@ -6,13 +6,17 @@ import MobileNav from "../components/MobileNav"
 
 export default function MainLayout() {
 
-    const fetchMe = useAuthStore(state => state.fetchMe)
+    const fetchMe = useAuthStore(
 
-        useEffect(() => {
+    state => state.fetchMe
 
-        fetchMe()
+    )
 
-        }, [])
+    useEffect(() => {
+
+    fetchMe()
+
+    }, [])
 
   return (
 

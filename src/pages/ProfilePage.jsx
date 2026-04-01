@@ -46,7 +46,7 @@ export default function ProfilePage() {
 
     ">
 
-      {user?.name}
+      {user?.fullname}
 
     </p>
 
@@ -87,7 +87,7 @@ export default function ProfilePage() {
             font-medium
           ">
 
-            Erbol Zh
+            {user?.fullname}
 
           </p>
 
@@ -98,7 +98,7 @@ export default function ProfilePage() {
             text-gray-500
           ">
 
-            erbol@mail.com
+            {user?.email}
 
           </p>
 

@@ -8,6 +8,8 @@ import {
 
   getMeRequest,
 
+  logoutRequest,
+
 } from "../api/auth"
 
 
@@ -15,8 +17,6 @@ import {
 export const useAuthStore = create((set) => ({
 
   user: null,
-
-  token: localStorage.getItem("token"),
 
   isLoading: false,
 
@@ -30,11 +30,7 @@ export const useAuthStore = create((set) => ({
 
       const res = await registerRequest(data)
 
-      localStorage.setItem("token", res.token)
-
       set({
-
-        token: res.token,
 
         user: res.user,
 
@@ -60,11 +56,7 @@ export const useAuthStore = create((set) => ({
 
       const res = await loginRequest(data)
 
-      localStorage.setItem("token", res.token)
-
       set({
-
-        token: res.token,
 
         user: res.user,
 
@@ -88,17 +80,17 @@ export const useAuthStore = create((set) => ({
 
       const user = await getMeRequest()
 
-      set({ user })
+      set({
+
+        user,
+
+      })
 
     }
 
     catch {
 
-      localStorage.removeItem("token")
-
       set({
-
-        token: null,
 
         user: null,
 
@@ -110,13 +102,11 @@ export const useAuthStore = create((set) => ({
 
 
 
-  logout: () => {
+  logout: async () => {
 
-    localStorage.removeItem("token")
+    await logoutRequest()
 
     set({
-
-      token: null,
 
       user: null,
 

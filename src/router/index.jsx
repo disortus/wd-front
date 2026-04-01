@@ -4,6 +4,7 @@ import HomePage from "../pages/HomePage"
 import RegisterPage from "../pages/RegisterPage"
 import ProfilePage from "../pages/ProfilePage"
 import LoginPage from "../pages/LoginPage"
+import ProtectedRoute from "../components/ProtectedRoute"
 
 export const router = createBrowserRouter([
   {
@@ -22,7 +23,17 @@ export const router = createBrowserRouter([
 
       {
         path: "/profile",
-        element: <ProfilePage />,
+
+        element: (
+
+          <ProtectedRoute>
+
+            <ProfilePage />
+
+          </ProtectedRoute>
+
+        ),
+
       },
 
       {
