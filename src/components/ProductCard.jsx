@@ -1,97 +1,30 @@
+import { Link } from "react-router-dom";
+import Card from "./ui/Card.jsx";
+
 export default function ProductCard({ product }) {
+  const price = product.price;
 
   return (
-
-    <div className="
-
-      border
-
-      border-border
-
-      rounded-2xl
-
-      p-4
-
-      bg-white
-
-      shadow-card
-
-      hover:shadow-md
-
-      transition
-
-    ">
-
-      <div className="
-
-        bg-surface
-
-        h-40
-
-        rounded-xl
-
-      " />
-
-
-
-      <h3 className="
-
-        mt-4
-
-        text-sm
-
-        font-medium
-
-      ">
-
-        {product.title}
-
-      </h3>
-
-
-
-      <p className="
-
-        mt-1
-
-        text-sm
-
-        text-secondary
-
-      ">
-
-        {product.price} ₸
-
-      </p>
-
-
-
-      <button className="
-
-        mt-3
-
-        w-full
-
-        h-9
-
-        rounded-xl
-
-        border
-
-        text-sm
-
-        hover:bg-surface
-
-        transition
-
-      ">
-
-        В корзину
-
-      </button>
-
-    </div>
-
-  )
-
+    <Link to={`/products/${product.slug}`}>
+      <Card hover>
+        <div className="aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
+          {product.images?.[0] ? (
+            <img
+              src={product.images[0]}
+              alt={product.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="text-gray-400 text-4xl">📦</div>
+          )}
+        </div>
+        <div className="p-4">
+          <h3 className="font-medium text-sm line-clamp-2 mb-2">
+            {product.title}
+          </h3>
+          <p className="text-lg font-semibold">{price.toLocaleString()} ₸</p>
+        </div>
+      </Card>
+    </Link>
+  );
 }

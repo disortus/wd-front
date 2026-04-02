@@ -1,144 +1,73 @@
-import Container from "../components/Container"
-import Input from "../components/Input"
-import { useAuthStore } from "../store/authStore"
-import { useForm } from "react-hook-form"
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth.js";
+import { Input } from "../components/ui/index.js";
+import Button from "../components/ui/Button.jsx";
 
 export default function LoginPage() {
+  const { login, error } = useAuth();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState("");
 
-  const {
-
-    register,
-
-    handleSubmit,
-
-    formState: { errors }
-
-  } = useForm()
-
-  const loginUser = useAuthStore(state => state.login)
-  const isLoading = useAuthStore(state => state.isLoading)
-
-async function onSubmit(data) {
-
-  await loginUser(data)
-
-}
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormError("");
+    if (!email || !password) {
+      setFormError("Заполните все поля");
+      return;
+    }
+    setLoading(true);
+    const result = await login(email, password);
+    setLoading(false);
+    if (result.success) {
+      navigate("/");
+    }
+  };
 
   return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <Link to="/" className="text-2xl font-bold">Store</Link>
+          <h1 className="mt-6 text-3xl font-semibold">Войти</h1>
+          <p className="mt-2 text-gray-500">Введите данные аккаунта</p>
+        </div>
 
-    <Container>
-
-      <div className="
-        mt-10
-
-        max-w-md
-      ">
-
-        <h1 className="
-          text-xl
-          font-semibold
-        ">
-
-          Login
-
-        </h1>
-
-
-        <form
-
-          onSubmit={handleSubmit(onSubmit)}
-
-          className="
-            mt-6
-
-            space-y-4
-          "
-        >
-
-
+        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm space-y-5">
+          {(formError || error) && (
+            <div className="p-3 bg-red-50 text-red-600 text-sm rounded-xl">
+              {formError || error}
+            </div>
+          )}
           <Input
-
             label="Email"
-
             type="email"
-
-            placeholder="email@mail.com"
-
-            {...register("email", {
-
-              required: "Введите email"
-
-            })}
-
-            error={errors.email?.message}
-
+            placeholder="example@mail.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
           />
-
-
           <Input
-
-            label="Password"
-
+            label="Пароль"
             type="password"
-
-            placeholder="******"
-
-            {...register("password", {
-
-              required: "Введите пароль"
-
-            })}
-
-            error={errors.password?.message}
-
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
           />
-
-
-          <button
-            disabled={isLoading}
-            className="
-              w-full
-
-              h-11
-
-              bg-black
-              text-white
-
-              rounded-xl
-
-              text-sm
-
-              hover:bg-neutral-800
-
-              transition
-            "
-
-          >
-            {isLoading ? "Loading..." : "Login"}
-            Login
-
-          </button>
-
-        <p className="text-sm text-gray-500 text-center">
-
-        No account?
-
-        <a
-            href="/register"
-            className="ml-1 underline"
-        >
-            Register
-        </a>
-
-        </p>
-
+          <Button fullWidth loading={loading}>Войти</Button>
         </form>
 
+        <p className="mt-6 text-center text-sm text-gray-500">
+          Нет аккаунта?{" "}
+          <Link to="/register" className="text-black font-medium hover:underline">
+            Зарегистрироваться
+          </Link>
+        </p>
       </div>
-
-    </Container>
-
-  )
-
+    </div>
+  );
 }

@@ -1,59 +1,6 @@
-import api from "./client"
+import client from "./client.js";
 
-
-
-export async function registerRequest(data) {
-
-  const res = await api.post(
-
-    "/auth/register",
-
-    data
-
-  )
-
-  return res.data
-
-}
-
-
-
-export async function loginRequest(data) {
-
-  const res = await api.post(
-
-    "/auth/login",
-
-    data
-
-  )
-
-  return res.data
-
-}
-
-
-
-export async function getMeRequest() {
-
-  const res = await api.get(
-
-    "/profile/me"
-
-  )
-
-  return res.data
-
-}
-
-
-
-export async function logoutRequest() {
-
-  await api.post(
-
-    "/auth/logout"
-
-  )
-
-}
+export const authApi = {
+  login: (data) => client.post("/auth/login", data),
+  register: (data) => client.post("/auth/register", data),
+};
