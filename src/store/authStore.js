@@ -2,6 +2,38 @@ import { create } from "zustand";
 import { authApi } from "../api/auth.js";
 import { profileApi } from "../api/profile.js";
 
+const parseAuthError = (err, mode = "login") => {
+  const status = err?.response?.status;
+  const payload = err?.response?.data;
+  const rawMessage = payload?.message || payload?.error || payload?.errors?.[0]?.msg || err?.message || "";
+  const normalized = String(rawMessage).toLowerCase();
+
+  if (mode === "login") {
+    if (
+      status === 401
+      || normalized.includes("invalid")
+      || normalized.includes("password")
+      || normalized.includes("credential")
+    ) {
+      return "Неверный номер телефона или пароль";
+    }
+
+    return rawMessage || "Ошибка входа";
+  }
+
+  if (
+    status === 409
+    || normalized.includes("already exists")
+    || normalized.includes("already registered")
+    || normalized.includes("phone already")
+    || normalized.includes("exists")
+  ) {
+    return "Пользователь уже зарегистрирован";
+  }
+
+  return rawMessage || "Ошибка регистрации";
+};
+
 const useAuthStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
@@ -63,7 +95,7 @@ const useAuthStore = create((set, get) => ({
     }
 
     catch (err) {
-      const message = err.response?.data?.message || "Ошибка входа";
+      const message = parseAuthError(err, "login");
       set({
         error: message,
         isLoading: false,
@@ -104,7 +136,7 @@ const useAuthStore = create((set, get) => ({
     }
 
     catch (err) {
-      const message = err.response?.data?.message || "Ошибка регистрации";
+      const message = parseAuthError(err, "register");
 
       set({
         error: message,

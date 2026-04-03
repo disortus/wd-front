@@ -31,6 +31,7 @@ export default function Header() {
   };
 
   const cartCount = cart?.totalItems || 0;
+  const profileLink = isAuthenticated ? "/profile" : "/login";
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-neutral-200">
@@ -77,9 +78,13 @@ export default function Header() {
                 >
                   Выйти
                 </button>
-                <div className="w-8 h-8 rounded-full bg-neutral-900 text-white text-xs font-semibold flex items-center justify-center">
+                <Link
+                  to={profileLink}
+                  className="w-8 h-8 rounded-full bg-neutral-900 text-white text-xs font-semibold flex items-center justify-center hover:bg-black transition-colors"
+                  aria-label="Профиль"
+                >
                   {user?.fullname?.charAt(0)?.toUpperCase() || "U"}
-                </div>
+                </Link>
               </div>
             ) : (
               <div className="hidden sm:flex items-center gap-2">
@@ -99,7 +104,7 @@ export default function Header() {
             )}
 
             <Link
-              to={isAuthenticated ? getDashboardLink() : "/login"}
+              to={profileLink}
               className="sm:hidden w-8 h-8 rounded-full bg-neutral-900 text-white text-xs font-semibold flex items-center justify-center"
               aria-label="Профиль"
             >

@@ -1,20 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
 import { Input } from "../components/ui/index.js";
 import Button from "../components/ui/Button.jsx";
 
 export default function LoginPage() {
-  const { login, error } = useAuth();
+  const { login, error, clearError } = useAuth();
   const navigate = useNavigate();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
 
+  useEffect(() => {
+    clearError();
+    return () => clearError();
+  }, [clearError]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError("");
+    clearError();
     if (!phone || !password) {
       setFormError("Заполните все поля");
       return;
@@ -47,7 +53,11 @@ export default function LoginPage() {
             type="tel"
             placeholder="+77001234567"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => {
+              setPhone(e.target.value);
+              if (formError) setFormError("");
+              if (error) clearError();
+            }}
             autoComplete="tel"
           />
           <Input
@@ -55,7 +65,11 @@ export default function LoginPage() {
             type="password"
             placeholder="••••••••"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (formError) setFormError("");
+              if (error) clearError();
+            }}
             autoComplete="current-password"
           />
           <Button fullWidth loading={loading}>Войти</Button>

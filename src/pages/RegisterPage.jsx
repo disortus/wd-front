@@ -1,29 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
 import { Input } from "../components/ui/index.js";
 import Button from "../components/ui/Button.jsx";
 
 export default function RegisterPage() {
-  const { register, error } = useAuth();
+  const { register, error, clearError } = useAuth();
   const navigate = useNavigate();
   const [fullname, setFullname] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
 
+  useEffect(() => {
+    clearError();
+    return () => clearError();
+  }, [clearError]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError("");
+    clearError();
 
-    if (!fullname || !phone || !password) {
-      setFormError("Имя, телефон и пароль обязательны");
+    if (!fullname || !phone || !password || !confirmPassword) {
+      setFormError("Имя, телефон, пароль и подтверждение пароля обязательны");
       return;
     }
 
     if (password.length < 6) {
       setFormError("Пароль должен быть не менее 6 символов");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setFormError("Пароли не совпадают");
       return;
     }
 
@@ -56,7 +68,11 @@ export default function RegisterPage() {
             type="text"
             placeholder="Иван Иванов"
             value={fullname}
-            onChange={(e) => setFullname(e.target.value)}
+            onChange={(e) => {
+              setFullname(e.target.value);
+              if (formError) setFormError("");
+              if (error) clearError();
+            }}
             autoComplete="name"
           />
           <Input
@@ -64,7 +80,11 @@ export default function RegisterPage() {
             type="tel"
             placeholder="+77001234567"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => {
+              setPhone(e.target.value);
+              if (formError) setFormError("");
+              if (error) clearError();
+            }}
             autoComplete="tel"
           />
           <Input
@@ -72,7 +92,23 @@ export default function RegisterPage() {
             type="password"
             placeholder="••••••••"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              if (formError) setFormError("");
+              if (error) clearError();
+            }}
+            autoComplete="new-password"
+          />
+          <Input
+            label="Подтвердите пароль"
+            type="password"
+            placeholder="••••••••"
+            value={confirmPassword}
+            onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              if (formError) setFormError("");
+              if (error) clearError();
+            }}
             autoComplete="new-password"
           />
           <Button fullWidth loading={loading}>Зарегистрироваться</Button>
