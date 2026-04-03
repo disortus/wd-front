@@ -1,7 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth.js";
 import useCartStore from "../store/cartStore.js";
-import { ROLES } from "../types/index.js";
+import { ROLES, ROLE_LABELS } from "../types/index.js";
 import { useEffect } from "react";
 
 export default function Header() {
@@ -33,29 +33,25 @@ export default function Header() {
   const cartCount = cart?.totalItems || 0;
 
   return (
-    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200">
+    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-neutral-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold tracking-tight">Store</span>
+        <div className="flex items-center justify-between h-14 sm:h-16 gap-3">
+          <Link to="/" className="flex items-center gap-2 shrink-0">
+            <span className="text-base sm:text-lg font-semibold tracking-[0.12em]">APL. STORE</span>
           </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-6">
-            <Link to="/catalog" className="text-sm text-gray-600 hover:text-black transition-colors">
+          <nav className="hidden md:flex items-center gap-5">
+            <NavLink to="/catalog" className={({ isActive }) => `text-sm transition-colors ${isActive ? "text-black" : "text-neutral-500 hover:text-black"}`}>
               Каталог
-            </Link>
-            <Link to="/products" className="text-sm text-gray-600 hover:text-black transition-colors">
+            </NavLink>
+            <NavLink to="/products" className={({ isActive }) => `text-sm transition-colors ${isActive ? "text-black" : "text-neutral-500 hover:text-black"}`}>
               Товары
-            </Link>
+            </NavLink>
           </nav>
 
-          {/* Right Section */}
-          <div className="flex items-center gap-4">
-            {/* Cart */}
+          <div className="flex items-center gap-2 sm:gap-3">
             {isAuthenticated && (
-              <Link to="/cart" className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <Link to="/cart" className="relative p-2 hover:bg-neutral-100 rounded-xl transition-colors" aria-label="Корзина">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
@@ -67,53 +63,29 @@ export default function Header() {
               </Link>
             )}
 
-            {/* Auth Links */}
             {isAuthenticated ? (
-              <div className="relative group">
-                <button className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                  <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-medium">
-                    {user?.fullname?.charAt(0)?.toUpperCase() || "U"}
-                  </div>
+              <div className="hidden sm:flex items-center gap-2">
+                <Link
+                  to={getDashboardLink()}
+                  className="px-3 py-2 rounded-xl text-sm border border-neutral-200 hover:bg-neutral-100 transition-colors"
+                >
+                  {role === ROLES.USER ? "Профиль" : ROLE_LABELS[role]}
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-3 py-2 rounded-xl text-sm text-neutral-600 hover:text-black hover:bg-neutral-100 transition-colors"
+                >
+                  Выйти
                 </button>
-                {/* Dropdown */}
-                <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                  <div className="p-3 border-b border-gray-100">
-                    <p className="text-sm font-medium">{user?.fullname}</p>
-                    <p className="text-xs text-gray-500">{user?.email}</p>
-                  </div>
-                  <div className="py-1">
-                    <Link
-                      to={getDashboardLink()}
-                      className="block px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
-                    >
-                      {role === ROLES.USER ? "Профиль" : "Панель"}
-                    </Link>
-                    <Link
-                      to="/profile/orders"
-                      className="block px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
-                    >
-                      Мои заказы
-                    </Link>
-                    <Link
-                      to="/profile/tickets"
-                      className="block px-4 py-2 text-sm hover:bg-gray-50 transition-colors"
-                    >
-                      Мои обращения
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50 transition-colors"
-                    >
-                      Выйти
-                    </button>
-                  </div>
+                <div className="w-8 h-8 rounded-full bg-neutral-900 text-white text-xs font-semibold flex items-center justify-center">
+                  {user?.fullname?.charAt(0)?.toUpperCase() || "U"}
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="hidden sm:flex items-center gap-2">
                 <Link
                   to="/login"
-                  className="text-sm text-gray-600 hover:text-black transition-colors px-3 py-2"
+                  className="text-sm text-neutral-600 hover:text-black transition-colors px-3 py-2"
                 >
                   Войти
                 </Link>
@@ -125,6 +97,14 @@ export default function Header() {
                 </Link>
               </div>
             )}
+
+            <Link
+              to={isAuthenticated ? getDashboardLink() : "/login"}
+              className="sm:hidden w-8 h-8 rounded-full bg-neutral-900 text-white text-xs font-semibold flex items-center justify-center"
+              aria-label="Профиль"
+            >
+              {isAuthenticated ? (user?.fullname?.charAt(0)?.toUpperCase() || "U") : "→"}
+            </Link>
           </div>
         </div>
       </div>

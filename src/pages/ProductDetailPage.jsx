@@ -15,16 +15,55 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
 
+  const findProductBySlugFallback = useCallback(async (targetSlug) => {
+    if (!targetSlug) return null;
+
+    const normalizedSlug = decodeURIComponent(targetSlug);
+    const limit = 50;
+    let page = 1;
+    let pages = 1;
+
+    while (page <= pages && page <= 10) {
+      const { data } = await productsApi.getList({ page, limit });
+      const items = Array.isArray(data?.data) ? data.data : [];
+      const matched = items.find((item) => item?.slug === normalizedSlug);
+
+      if (matched) {
+        return matched;
+      }
+
+      pages = Number(data?.pages) || Math.ceil((Number(data?.total) || 0) / limit) || 1;
+      page += 1;
+    }
+
+    return null;
+  }, []);
+
   const fetchProduct = useCallback(async () => {
+    setLoading(true);
+    setError("");
+
     try {
       const { data } = await productsApi.getBySlug(slug);
       setProduct(data.data);
     } catch {
+      try {
+        const fallbackProduct = await findProductBySlugFallback(slug);
+
+        if (fallbackProduct) {
+          setProduct(fallbackProduct);
+          return;
+        }
+      } catch {
+        // fallback failed
+      }
+
       setError("Товар не найден");
+      setProduct(null);
     } finally {
       setLoading(false);
     }
-  }, [slug]);
+  }, [slug, findProductBySlugFallback]);
 
   useEffect(() => {
     fetchProduct();

@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import ProductCard from "../components/ProductCard.jsx";
 
 export default function HomePage() {
   return (

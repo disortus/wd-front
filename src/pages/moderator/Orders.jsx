@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { moderatorApi } from "../../api/moderator.js";
 import Card from "../../components/ui/Card.jsx";
-import { Badge, StatusBadge } from "../../components/ui/index.js";
+import { StatusBadge } from "../../components/ui/index.js";
 import {
   ORDER_STATUS,
   ORDER_STATUS_LABELS,

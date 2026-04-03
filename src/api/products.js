@@ -5,7 +5,7 @@ export const productsApi = {
   getList: (params = {}) => client.get("/public/products", { params }),
 
   // GET /api/public/products/:slug
-  getBySlug: (slug) => client.get(`/public/products/${slug}`),
+  getBySlug: (slug) => client.get(`/public/products/${encodeURIComponent(slug)}`),
 
   // GET /api/public/catalog/tree
   getCatalogTree: () => client.get("/public/catalog/tree"),

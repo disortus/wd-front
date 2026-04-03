@@ -8,7 +8,6 @@ export default function RegisterPage() {
   const { register, error } = useAuth();
   const navigate = useNavigate();
   const [fullname, setFullname] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,8 +17,8 @@ export default function RegisterPage() {
     e.preventDefault();
     setFormError("");
 
-    if (!fullname || !email || !password) {
-      setFormError("Имя, email и пароль обязательны");
+    if (!fullname || !phone || !password) {
+      setFormError("Имя, телефон и пароль обязательны");
       return;
     }
 
@@ -29,7 +28,7 @@ export default function RegisterPage() {
     }
 
     setLoading(true);
-    const result = await register(fullname, email, password, phone);
+    const result = await register(fullname, phone, password);
     setLoading(false);
 
     if (result.success) {
@@ -59,14 +58,6 @@ export default function RegisterPage() {
             value={fullname}
             onChange={(e) => setFullname(e.target.value)}
             autoComplete="name"
-          />
-          <Input
-            label="Email"
-            type="email"
-            placeholder="example@mail.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
           />
           <Input
             label="Телефон"

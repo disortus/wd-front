@@ -1,11 +1,14 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import useCartStore from "../store/cartStore.js";
-import useAuthStore from "../store/authStore.js";
+import { useAuth } from "../hooks/useAuth.js";
 import { useEffect } from "react";
 import Button from "../components/ui/Button.jsx";
+import { formatCurrency, getProductSlug } from "../utils/format.js";
 
 function CartItem({ item }) {
   const { updateCartItem, removeFromCart } = useCartStore();
+  const productSlug = getProductSlug(item?.productSnapshot);
+  const encodedProductSlug = productSlug ? encodeURIComponent(productSlug) : "";
 
   return (
     <div className="flex items-center gap-4 py-4 border-b border-gray-100 last:border-0">
@@ -17,11 +20,14 @@ function CartItem({ item }) {
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <Link to={`/products/${item.productSnapshot.slug}`} className="font-medium text-sm hover:underline">
+        <Link
+          to={encodedProductSlug ? `/products/${encodedProductSlug}` : "/products"}
+          className="font-medium text-sm hover:underline"
+        >
           {item.productSnapshot.title}
         </Link>
         <p className="text-sm text-gray-500 mt-0.5">
-          {item.priceSnapshot.toLocaleString()} ₸ × {item.quantity}
+          {formatCurrency(item.priceSnapshot)} × {item.quantity}
         </p>
       </div>
       <div className="flex items-center gap-2">
@@ -40,7 +46,7 @@ function CartItem({ item }) {
         </button>
       </div>
       <p className="w-28 text-right text-sm font-medium">
-        {(item.priceSnapshot * item.quantity).toLocaleString()} ₸
+        {formatCurrency(item.priceSnapshot * item.quantity)}
       </p>
       <button
         onClick={() => removeFromCart(item.product)}
@@ -56,7 +62,7 @@ function CartItem({ item }) {
 
 export default function CartPage() {
   const { cart, isLoading, fetchCart, clearCart } = useCartStore();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, hasInitialized } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,9 +71,8 @@ export default function CartPage() {
     }
   }, [isAuthenticated, fetchCart]);
 
-  if (!isAuthenticated) {
-    navigate("/login");
-    return null;
+  if (hasInitialized && !isAuthenticated) {
+    return <Navigate to="/login" replace />;
   }
 
   if (isLoading) {
@@ -131,7 +136,7 @@ export default function CartPage() {
             <div className="space-y-3 mb-6">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Товары</span>
-                <span>{totalPrice.toLocaleString()} ₸</span>
+                <span>{formatCurrency(totalPrice)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Доставка</span>
@@ -139,7 +144,7 @@ export default function CartPage() {
               </div>
               <div className="pt-3 border-t border-gray-200 flex justify-between">
                 <span className="font-semibold">К оплате</span>
-                <span className="font-semibold text-lg">{totalPrice.toLocaleString()} ₸</span>
+                <span className="font-semibold text-lg">{formatCurrency(totalPrice)}</span>
               </div>
             </div>
             <Button fullWidth onClick={() => navigate("/checkout")}>

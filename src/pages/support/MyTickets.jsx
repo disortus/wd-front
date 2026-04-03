@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supportApi } from "../../api/support.js";
 import Card from "../../components/ui/Card.jsx";
-import { Badge, StatusBadge } from "../../components/ui/index.js";
+import { StatusBadge } from "../../components/ui/index.js";
 import {
   TICKET_STATUS,
   TICKET_STATUS_LABELS,

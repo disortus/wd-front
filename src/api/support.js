@@ -5,6 +5,20 @@ export const supportApi = {
   // POST /api/public/tickets
   createTicket: (data) => client.post("/public/tickets", data),
 
+  // GET /api/public/tickets
+  getMyPublicTickets: (params = {}) => client.get("/public/tickets", { params }),
+
+  // GET /api/public/tickets/:id
+  getPublicTicket: (id) => client.get(`/public/tickets/${id}`),
+
+  // POST /api/public/tickets/:id/messages
+  addPublicMessage: (id, data) =>
+    client.post(`/public/tickets/${id}/messages`, data),
+
+  // POST /api/public/tickets/:id/rate
+  rateTicketByUser: (id, data) =>
+    client.post(`/public/tickets/${id}/rate`, data),
+
   // Support panel
   // GET /api/support/tickets
   getMyTickets: (params = {}) => client.get("/support/tickets", { params }),

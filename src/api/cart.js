@@ -7,8 +7,8 @@ export const cartApi = {
   // POST /api/public/cart
   addToCart: (data) => client.post("/public/cart", data),
 
-  // PUT /api/public/cart/:productId
-  updateCartItem: (productId, data) => client.put(`/public/cart/${productId}`, data),
+  // PATCH /api/public/cart/:productId
+  updateCartItem: (productId, data) => client.patch(`/public/cart/${productId}`, data),
 
   // DELETE /api/public/cart/:productId
   removeFromCart: (productId, attributes) => {
@@ -16,6 +16,6 @@ export const cartApi = {
     return client.delete(`/public/cart/${productId}`, { params });
   },
 
-  // POST /api/public/cart/clear
-  clearCart: () => client.post("/public/cart/clear"),
+  // DELETE /api/public/cart
+  clearCart: () => client.delete("/public/cart"),
 };

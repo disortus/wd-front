@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import MainLayout from "../layouts/MainLayout.jsx";
 import PanelLayout from "../layouts/PanelLayout.jsx";
@@ -17,6 +17,10 @@ const CatalogPage = lazy(() => import("../pages/CatalogPage.jsx"));
 const CartPage = lazy(() => import("../pages/CartPage.jsx"));
 const CheckoutPage = lazy(() => import("../pages/CheckoutPage.jsx"));
 const ProfilePage = lazy(() => import("../pages/ProfilePage.jsx"));
+const ProfileOrdersPage = lazy(() => import("../pages/ProfileOrdersPage.jsx"));
+const ProfileOrderTrackingPage = lazy(() => import("../pages/ProfileOrderTrackingPage.jsx"));
+const ProfileTicketsPage = lazy(() => import("../pages/ProfileTicketsPage.jsx"));
+const ProfileTicketChatPage = lazy(() => import("../pages/ProfileTicketChatPage.jsx"));
 const CreateSupportTicketPage = lazy(() => import("../pages/CreateSupportTicketPage.jsx"));
 
 const AdminDashboard = lazy(() => import("../pages/admin/Dashboard.jsx"));
@@ -26,6 +30,7 @@ const AdminProducts = lazy(() => import("../pages/admin/Products.jsx"));
 
 const ModeratorDashboard = lazy(() => import("../pages/moderator/Dashboard.jsx"));
 const ModeratorOrders = lazy(() => import("../pages/moderator/Orders.jsx"));
+const ModeratorProducts = lazy(() => import("../pages/moderator/Products.jsx"));
 
 const CourierDashboard = lazy(() => import("../pages/courier/Dashboard.jsx"));
 const CourierOrders = lazy(() => import("../pages/courier/Orders.jsx"));
@@ -46,10 +51,16 @@ const router = createBrowserRouter([
       { index: true, element: <LazyPage><HomePage /></LazyPage> },
       { path: "/products", element: <LazyPage><ProductsPage /></LazyPage> },
       { path: "/products/:slug", element: <LazyPage><ProductDetailPage /></LazyPage> },
+      { path: "/product/:slug", element: <LazyPage><ProductDetailPage /></LazyPage> },
       { path: "/catalog", element: <LazyPage><CatalogPage /></LazyPage> },
       { path: "/cart", element: <LazyPage><ProtectedRoute><CartPage /></ProtectedRoute></LazyPage> },
       { path: "/checkout", element: <LazyPage><ProtectedRoute><CheckoutPage /></ProtectedRoute></LazyPage> },
       { path: "/profile", element: <LazyPage><ProtectedRoute><ProfilePage /></ProtectedRoute></LazyPage> },
+      { path: "/profile/orders", element: <LazyPage><ProtectedRoute><ProfileOrdersPage /></ProtectedRoute></LazyPage> },
+      { path: "/profile/orders/:orderId", element: <LazyPage><ProtectedRoute><ProfileOrderTrackingPage /></ProtectedRoute></LazyPage> },
+      { path: "/profile/tracking", element: <LazyPage><ProtectedRoute><ProfileOrderTrackingPage /></ProtectedRoute></LazyPage> },
+      { path: "/profile/tickets", element: <LazyPage><ProtectedRoute><ProfileTicketsPage /></ProtectedRoute></LazyPage> },
+      { path: "/profile/tickets/:ticketId", element: <LazyPage><ProtectedRoute><ProfileTicketChatPage /></ProtectedRoute></LazyPage> },
       { path: "/support/create", element: <LazyPage><ProtectedRoute><CreateSupportTicketPage /></ProtectedRoute></LazyPage> },
     ],
   },
@@ -71,6 +82,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <LazyPage><ModeratorDashboard /></LazyPage> },
       { path: "/moderator/orders", element: <LazyPage><ModeratorOrders /></LazyPage> },
+      { path: "/moderator/products", element: <LazyPage><ModeratorProducts /></LazyPage> },
     ],
   },
   {
@@ -91,6 +103,7 @@ const router = createBrowserRouter([
       { path: "/support/tickets", element: <LazyPage><SupportMyTickets /></LazyPage> },
     ],
   },
+  { path: "*", element: <Navigate to="/" replace /> },
 ]);
 
 export default router;

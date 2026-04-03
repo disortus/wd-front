@@ -26,4 +26,12 @@ export const moderatorApi = {
   // POST /api/moderator/orders/:id/cancel
   cancelOrder: (id, data) =>
     client.post(`/moderator/orders/${id}/cancel`, data),
+
+  // Products for moderator
+  // GET /api/moderator/products
+  getProducts: (params = {}) => client.get("/moderator/products", { params }),
+
+  // PATCH /api/moderator/products/:id/increase-stock
+  increaseProductStock: (id, quantity) =>
+    client.patch(`/moderator/products/${id}/increase-stock`, { quantity }),
 };

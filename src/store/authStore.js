@@ -1,140 +1,153 @@
-// src/store/authStore.js
+import { create } from "zustand";
+import { authApi } from "../api/auth.js";
+import { profileApi } from "../api/profile.js";
 
-import { create } from "zustand"
-import { authApi } from "../api/auth"
-import { profileApi } from "../api/profile"
-
-const useAuthStore = create((set) => ({
-
+const useAuthStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
-  isLoading: true,
+  isLoading: false,
+  hasInitialized: false,
   error: null,
 
   initialize: async () => {
+    if (get().hasInitialized || get().isLoading) {
+      return;
+    }
+
+    set({ isLoading: true, error: null });
+
     try {
-      const { data } = await profileApi.getMe()
+      const { data } = await profileApi.getMe();
 
       set({
         user: data.data,
         isAuthenticated: true,
         isLoading: false,
-      })
+        hasInitialized: true,
+      });
     }
     catch {
       set({
         user: null,
         isAuthenticated: false,
         isLoading: false,
-      })
+        hasInitialized: true,
+      });
     }
   },
 
-  login: async (email, password) => {
-
+  login: async (phone, password) => {
     set({
       isLoading: true,
       error: null,
-    })
+    });
 
     try {
       await authApi.login({
-        email,
+        phone,
         password,
-      })
+      });
 
-      const { data } = await profileApi.getMe()
+      const { data } = await profileApi.getMe();
 
       set({
         user: data.data,
         isAuthenticated: true,
         isLoading: false,
-      })
+        hasInitialized: true,
+      });
 
       return {
         success: true,
-      }
+      };
     }
 
     catch (err) {
-      const message = err.response?.data?.message || "Ошибка входа"
+      const message = err.response?.data?.message || "Ошибка входа";
       set({
         error: message,
         isLoading: false,
-      })
+      });
 
       return {
         success: false,
         message,
-      }
+      };
     }
   },
 
-  register: async (fullname, email, password, phone) => {
-
+  register: async (fullname, phone, password) => {
     set({
       isLoading: true,
       error: null,
-    })
+    });
 
     try {
       await authApi.register({
         fullname,
-        email,
-        password,
         phone,
-      })
+        password,
+      });
 
-      const { data } = await profileApi.getMe()
+      const { data } = await profileApi.getMe();
 
       set({
         user: data.data,
         isAuthenticated: true,
         isLoading: false,
-      })
+        hasInitialized: true,
+      });
 
       return {
         success: true,
-      }
+      };
     }
 
     catch (err) {
-      const message = err.response?.data?.message || "Ошибка регистрации"
+      const message = err.response?.data?.message || "Ошибка регистрации";
 
       set({
         error: message,
         isLoading: false,
-      })
+      });
 
       return {
         success: false,
         message,
-      }
+      };
     }
   },
 
   logout: async () => {
     try {
-      await authApi.logout()
+      await authApi.logout();
     }
     finally {
-      set({
-        user: null,
-        isAuthenticated: false,
-      })
+      get().forceLogout();
     }
   },
+
+  forceLogout: () => {
+    set({
+      user: null,
+      isAuthenticated: false,
+      hasInitialized: true,
+      isLoading: false,
+      error: null,
+    });
+  },
+
   updateUser: (userData) => {
-    set(state => ({
+    set((state) => ({
       user: {
         ...state.user,
         ...userData,
       },
-    }))
+    }));
   },
   clearError: () => set({
     error: null,
   }),
-}))
+}));
 
-export default useAuthStore
+export default useAuthStore;

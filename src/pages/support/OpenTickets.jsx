@@ -3,10 +3,6 @@ import { supportApi } from "../../api/support.js";
 import Card from "../../components/ui/Card.jsx";
 import { Badge, StatusBadge } from "../../components/ui/index.js";
 import {
-  TICKET_STATUS,
-  TICKET_STATUS_LABELS,
-  TICKET_STATUS_COLORS,
-  TICKET_PRIORITY,
   TICKET_PRIORITY_LABELS,
   TICKET_PRIORITY_COLORS,
 } from "../../types/index.js";

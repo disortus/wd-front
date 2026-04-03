@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import useCartStore from "../store/cartStore.js";
 import { ordersApi } from "../api/orders.js";
 import useAuthStore from "../store/authStore.js";
 import { useEffect } from "react";
 import Button from "../components/ui/Button.jsx";
 import { Input } from "../components/ui/index.js";
+import { formatCurrency, mapApiError } from "../utils/format.js";
 
 export default function CheckoutPage() {
   const { cart, fetchCart, clearCart } = useCartStore();
@@ -31,8 +32,7 @@ export default function CheckoutPage() {
   }, [fetchCart, user]);
 
   if (!cart || cart.items.length === 0) {
-    navigate("/cart");
-    return null;
+    return <Navigate to="/cart" replace />;
   }
 
   const handleSubmit = async (e) => {
@@ -54,7 +54,7 @@ export default function CheckoutPage() {
       clearCart();
       navigate("/profile/orders");
     } catch (err) {
-      setError(err.response?.data?.message || "Ошибка создания заказа");
+      setError(mapApiError(err, "Ошибка создания заказа"));
     } finally {
       setLoading(false);
     }
@@ -136,7 +136,7 @@ export default function CheckoutPage() {
                     <p className="text-xs text-gray-500">× {item.quantity}</p>
                   </div>
                   <p className="text-sm font-medium">
-                    {(item.priceSnapshot * item.quantity).toLocaleString()} ₸
+                    {formatCurrency(item.priceSnapshot * item.quantity)}
                   </p>
                 </div>
               ))}
@@ -145,7 +145,7 @@ export default function CheckoutPage() {
             <div className="space-y-3 pt-4 border-t border-gray-200">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Товары</span>
-                <span>{totalPrice.toLocaleString()} ₸</span>
+                <span>{formatCurrency(totalPrice)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Доставка</span>
@@ -153,7 +153,7 @@ export default function CheckoutPage() {
               </div>
               <div className="pt-3 border-t border-gray-200 flex justify-between">
                 <span className="font-semibold">Итого</span>
-                <span className="font-semibold text-lg">{totalPrice.toLocaleString()} ₸</span>
+                <span className="font-semibold text-lg">{formatCurrency(totalPrice)}</span>
               </div>
             </div>
 

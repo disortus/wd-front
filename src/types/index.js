@@ -94,6 +94,7 @@ export const DASHBOARD_NAV = {
     { label: "Профиль", path: "/profile" },
     { label: "Мои заказы", path: "/profile/orders" },
     { label: "Мои обращения", path: "/profile/tickets" },
+    { label: "Текущие доставки", path: "/profile/tracking" },
   ],
   [ROLES.ADMIN]: [
     { label: "Дашборд", path: "/admin" },
@@ -104,6 +105,7 @@ export const DASHBOARD_NAV = {
   [ROLES.MODERATOR]: [
     { label: "Дашборд", path: "/moderator" },
     { label: "Заказы", path: "/moderator/orders" },
+    { label: "Склад", path: "/moderator/products" },
   ],
   [ROLES.COURIER]: [
     { label: "Дашборд", path: "/courier" },
@@ -115,4 +117,12 @@ export const DASHBOARD_NAV = {
     { label: "Открытые тикеты", path: "/support/open" },
     { label: "Мои тикеты", path: "/support/tickets" },
   ],
+};
+
+export const ROLE_LABELS = {
+  [ROLES.USER]: "Клиент",
+  [ROLES.ADMIN]: "Администратор",
+  [ROLES.MODERATOR]: "Модератор",
+  [ROLES.COURIER]: "Курьер",
+  [ROLES.SUPPORT]: "Поддержка",
 };

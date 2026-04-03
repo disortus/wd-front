@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { courierApi } from "../../api/courier.js";
 import Card from "../../components/ui/Card.jsx";
 import { StatusBadge } from "../../components/ui/index.js";
@@ -8,25 +8,38 @@ import {
   ORDER_STATUS_COLORS,
 } from "../../types/index.js";
 import Button from "../../components/ui/Button.jsx";
+import { formatCurrency, mapApiError } from "../../utils/format.js";
 
 export default function CourierOrders({ available }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const loadOrders = useCallback(async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const api = available ? courierApi.getAvailableOrders : courierApi.getMyOrders;
+      const { data } = await api();
+      setOrders(data.data || []);
+    } catch (err) {
+      setError(mapApiError(err, "Не удалось загрузить заказы"));
+    } finally {
+      setLoading(false);
+    }
+  }, [available]);
 
   useEffect(() => {
-    const api = available ? courierApi.getAvailableOrders : courierApi.getMyOrders;
-    api().then(({ data }) => {
-      setOrders(data.data || []);
-      setLoading(false);
-    }).catch(() => setLoading(false));
-  }, [available]);
+    loadOrders();
+  }, [loadOrders]);
 
   const handleAccept = async (id) => {
     try {
       await courierApi.acceptOrder(id);
-      setOrders(orders.filter((o) => o._id !== id));
-    } catch {
-      // Silent fail
+      await loadOrders();
+    } catch (err) {
+      setError(mapApiError(err, "Не удалось принять заказ"));
     }
   };
 
@@ -34,8 +47,8 @@ export default function CourierOrders({ available }) {
     try {
       const { data } = await courierApi.startDelivery(id, {});
       setOrders(orders.map((o) => (o._id === id ? data.data : o)));
-    } catch {
-      // Silent fail
+    } catch (err) {
+      setError(mapApiError(err, "Не удалось начать доставку"));
     }
   };
 
@@ -43,8 +56,8 @@ export default function CourierOrders({ available }) {
     try {
       const { data } = await courierApi.markDelivered(id, {});
       setOrders(orders.map((o) => (o._id === id ? data.data : o)));
-    } catch {
-      // Silent fail
+    } catch (err) {
+      setError(mapApiError(err, "Не удалось завершить доставку"));
     }
   };
 
@@ -52,6 +65,11 @@ export default function CourierOrders({ available }) {
 
   return (
     <div className="space-y-4">
+      {error && (
+        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
       {orders.map((order) => (
         <Card key={order._id}>
           <div className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -63,7 +81,7 @@ export default function CourierOrders({ available }) {
               <p className="text-sm text-gray-500">
                 {order.deliveryAddress?.street}, {order.deliveryAddress?.city}
               </p>
-              <p className="text-sm font-semibold mt-1">{order.totalPrice?.toLocaleString()} ₸</p>
+              <p className="text-sm font-semibold mt-1">{formatCurrency(order.totalPrice)}</p>
             </div>
             <div className="flex flex-col items-end gap-2">
               <StatusBadge

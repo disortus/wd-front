@@ -6,6 +6,7 @@ export const adminApi = {
   getUser: (id) => client.get(`/admin/users/${id}`),
   createUser: (data) => client.post("/admin/users", data),
   updateUser: (id, data) => client.patch(`/admin/users/${id}`, data),
+  toggleUser: (id) => client.patch(`/admin/users/${id}/toggle`),
   deleteUser: (id) => client.delete(`/admin/users/${id}`),
   getUsersByRole: (role) => client.get(`/admin/users/role/${role}`),
   getUserStats: () => client.get("/admin/users/stats"),
@@ -23,5 +24,9 @@ export const adminApi = {
   getProducts: (params = {}) => client.get("/admin/products", { params }),
   createProduct: (data) => client.post("/admin/products", data),
   updateProduct: (id, data) => client.patch(`/admin/products/${id}`, data),
+  increaseStock: (id, quantity) =>
+    client.patch(`/admin/products/${id}/increase-stock`, { quantity }),
+  decreaseStock: (id, quantity) =>
+    client.patch(`/admin/products/${id}/decrease-stock`, { quantity }),
   deleteProduct: (id) => client.delete(`/admin/products/${id}`),
 };

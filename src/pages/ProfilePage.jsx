@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { profileApi } from "../api/profile.js";
 import { Badge, StatusBadge, Table } from "../components/ui/index.js";
 import {
-  ORDER_STATUS,
   ORDER_STATUS_LABELS,
   ORDER_STATUS_COLORS,
-  TICKET_STATUS,
   TICKET_STATUS_LABELS,
   TICKET_STATUS_COLORS,
 } from "../types/index.js";
+import { formatCurrency, formatDate } from "../utils/format.js";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -17,6 +16,7 @@ export default function ProfilePage() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("profile");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -131,21 +131,16 @@ export default function ProfilePage() {
               {
                 key: "totalPrice",
                 label: "Сумма",
-                render: (val) => `${val?.toLocaleString()} ₸`,
+                render: (val) => formatCurrency(val),
               },
               {
                 key: "createdAt",
                 label: "Дата",
-                render: (val) => new Date(val).toLocaleDateString("ru-KZ"),
+                render: (val) => formatDate(val),
               },
             ]}
-            data={orders.map((order) => ({
-              ...order,
-              onClick: () => (window.location.href = `/profile/orders/${order._id}`),
-            }))}
-            onRowClick={(row) =>
-              row.onClick && (window.location.href = `/profile/orders/${row._id}`)
-            }
+            data={orders}
+            onRowClick={(row) => navigate(`/profile/orders/${row._id}`)}
           />
           <div className="mt-4">
             <Link
@@ -186,16 +181,11 @@ export default function ProfilePage() {
               {
                 key: "createdAt",
                 label: "Дата",
-                render: (val) => new Date(val).toLocaleDateString("ru-KZ"),
+                render: (val) => formatDate(val),
               },
             ]}
-            data={tickets.map((ticket) => ({
-              ...ticket,
-              onClick: () => (window.location.href = `/profile/tickets/${ticket._id}`),
-            }))}
-            onRowClick={(row) =>
-              row.onClick && (window.location.href = `/profile/tickets/${row._id}`)
-            }
+            data={tickets}
+            onRowClick={(row) => navigate(`/profile/tickets/${row._id}`)}
           />
           <div className="mt-4 flex items-center justify-between">
             <Link

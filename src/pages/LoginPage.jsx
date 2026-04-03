@@ -7,7 +7,7 @@ import Button from "../components/ui/Button.jsx";
 export default function LoginPage() {
   const { login, error } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
@@ -15,12 +15,12 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError("");
-    if (!email || !password) {
+    if (!phone || !password) {
       setFormError("Заполните все поля");
       return;
     }
     setLoading(true);
-    const result = await login(email, password);
+    const result = await login(phone, password);
     setLoading(false);
     if (result.success) {
       navigate("/");
@@ -43,12 +43,12 @@ export default function LoginPage() {
             </div>
           )}
           <Input
-            label="Email"
-            type="email"
-            placeholder="example@mail.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
+            label="Телефон"
+            type="tel"
+            placeholder="+77001234567"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            autoComplete="tel"
           />
           <Input
             label="Пароль"
