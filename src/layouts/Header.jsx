@@ -32,6 +32,22 @@ export default function Header() {
 
   const cartCount = cart?.totalItems || 0;
   const profileLink = isAuthenticated ? "/profile" : "/login";
+  const navItems = [
+    { to: "/", label: "Главная" },
+    { to: "/catalog", label: "Каталог" },
+    { to: "/products", label: "Товары" },
+  ];
+
+  if (isAuthenticated) {
+    if (role === ROLES.USER) {
+      navItems.push(
+        { to: "/profile/orders", label: "Мои заказы" },
+        { to: "/profile/tickets", label: "Поддержка" }
+      );
+    } else {
+      navItems.push({ to: getDashboardLink(), label: ROLE_LABELS[role] || "Панель" });
+    }
+  }
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-neutral-200">
@@ -41,13 +57,16 @@ export default function Header() {
             <span className="text-base sm:text-lg font-semibold tracking-[0.12em]">APL. STORE</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-5">
-            <NavLink to="/catalog" className={({ isActive }) => `text-sm transition-colors ${isActive ? "text-black" : "text-neutral-500 hover:text-black"}`}>
-              Каталог
-            </NavLink>
-            <NavLink to="/products" className={({ isActive }) => `text-sm transition-colors ${isActive ? "text-black" : "text-neutral-500 hover:text-black"}`}>
-              Товары
-            </NavLink>
+          <nav className="hidden md:flex items-center gap-1 rounded-2xl bg-neutral-100/70 p-1">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) => `px-3 py-1.5 rounded-xl text-sm transition-colors ${isActive ? "bg-white text-black shadow-sm" : "text-neutral-500 hover:text-black"}`}
+              >
+                {item.label}
+              </NavLink>
+            ))}
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-3">

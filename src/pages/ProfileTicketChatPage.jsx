@@ -91,19 +91,29 @@ export default function ProfileTicketChatPage() {
       )}
 
       <div className="rounded-2xl border border-neutral-200 bg-white p-4 sm:p-5">
-        <div className="space-y-3 max-h-[360px] overflow-auto pr-1">
+        <div className="space-y-3 max-h-[420px] overflow-auto pr-1">
           {messages.length === 0 ? (
             <p className="text-sm text-neutral-500">Сообщений пока нет</p>
           ) : (
-            messages.map((item, idx) => (
-              <div key={`${item.createdAt}-${idx}`} className="rounded-xl border border-neutral-200 p-3">
-                <div className="flex items-center justify-between gap-2 mb-1">
-                  <span className="text-xs font-medium uppercase text-neutral-600">{item.senderRole || "user"}</span>
-                  <span className="text-xs text-neutral-500">{formatDate(item.createdAt, { dateStyle: "short", timeStyle: "short" })}</span>
+            messages.map((item, idx) => {
+              const isMine = item.senderRole === "user";
+
+              return (
+                <div key={`${item.createdAt}-${idx}`} className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
+                  <div className={`max-w-[85%] rounded-2xl px-3 py-2 border ${isMine ? "bg-black text-white border-black" : "bg-neutral-50 border-neutral-200"}`}>
+                    <div className="flex items-center justify-between gap-3 mb-1">
+                      <span className={`text-[11px] uppercase ${isMine ? "text-neutral-300" : "text-neutral-500"}`}>
+                        {isMine ? "Вы" : "Поддержка"}
+                      </span>
+                      <span className={`text-[11px] ${isMine ? "text-neutral-300" : "text-neutral-500"}`}>
+                        {formatDate(item.createdAt, { dateStyle: "short", timeStyle: "short" })}
+                      </span>
+                    </div>
+                    <p className="text-sm whitespace-pre-wrap">{item.message}</p>
+                  </div>
                 </div>
-                <p className="text-sm text-neutral-800 whitespace-pre-wrap">{item.message}</p>
-              </div>
-            ))
+              );
+            })
           )}
         </div>
 

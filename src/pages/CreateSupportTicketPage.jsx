@@ -4,6 +4,19 @@ import { supportApi } from "../api/support.js";
 import Button from "../components/ui/Button.jsx";
 import { Input, Select, Textarea } from "../components/ui/index.js";
 
+const VALID_CATEGORIES = ["order", "product", "delivery", "payment", "account", "technical", "other"];
+const VALID_PRIORITIES = ["low", "medium", "high", "urgent"];
+
+function getApiErrorMessage(err) {
+  const errors = err?.response?.data?.errors;
+
+  if (Array.isArray(errors) && errors.length > 0) {
+    return errors.map((item) => item?.msg).filter(Boolean).join("\n");
+  }
+
+  return err?.response?.data?.message || "Ошибка создания обращения";
+}
+
 export default function CreateSupportTicketPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -18,16 +31,44 @@ export default function CreateSupportTicketPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    if (!form.subject || !form.description) {
+
+    const payload = {
+      ...form,
+      subject: form.subject.trim(),
+      description: form.description.trim(),
+    };
+
+    if (!payload.subject || !payload.description) {
       setError("Заполните тему и описание");
       return;
     }
+
+    if (payload.subject.length < 3 || payload.subject.length > 200) {
+      setError("Тема должна быть от 3 до 200 символов");
+      return;
+    }
+
+    if (payload.description.length < 10) {
+      setError("Описание должно быть не менее 10 символов");
+      return;
+    }
+
+    if (!VALID_CATEGORIES.includes(payload.category)) {
+      setError("Некорректная категория обращения");
+      return;
+    }
+
+    if (!VALID_PRIORITIES.includes(payload.priority)) {
+      setError("Некорректный приоритет обращения");
+      return;
+    }
+
     setLoading(true);
     try {
-      await supportApi.createTicket(form);
+      await supportApi.createTicket(payload);
       navigate("/profile/tickets");
     } catch (err) {
-      setError(err.response?.data?.message || "Ошибка создания обращения");
+      setError(getApiErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -44,6 +85,8 @@ export default function CreateSupportTicketPage() {
           label="Тема *"
           value={form.subject}
           onChange={(e) => setForm({ ...form, subject: e.target.value })}
+          minLength={3}
+          maxLength={200}
           required
         />
         <Textarea
@@ -51,6 +94,7 @@ export default function CreateSupportTicketPage() {
           rows={5}
           value={form.description}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
+          minLength={10}
           required
         />
         <div className="grid grid-cols-2 gap-4">

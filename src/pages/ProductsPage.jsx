@@ -56,15 +56,23 @@ export default function ProductsPage() {
     fetchCatalog();
   }, []);
 
-  const updateFilter = (key, value) => {
+  const updateFilters = (updates) => {
     const params = new URLSearchParams(searchParams);
-    if (value) {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
+
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+
     params.set("page", "1");
     setSearchParams(params);
+  };
+
+  const updateFilter = (key, value) => {
+    updateFilters({ [key]: value });
   };
 
   return (
@@ -88,8 +96,7 @@ export default function ProductsPage() {
                   label="Категория"
                   value={category}
                   onChange={(e) => {
-                    updateFilter("category", e.target.value);
-                    updateFilter("subcategory", "");
+                    updateFilters({ category: e.target.value, subcategory: "" });
                   }}
                 >
                   <option value="">Все категории</option>

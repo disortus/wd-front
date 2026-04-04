@@ -38,6 +38,7 @@ const CourierOrders = lazy(() => import("../pages/courier/Orders.jsx"));
 const SupportDashboard = lazy(() => import("../pages/support/Dashboard.jsx"));
 const SupportOpenTickets = lazy(() => import("../pages/support/OpenTickets.jsx"));
 const SupportMyTickets = lazy(() => import("../pages/support/MyTickets.jsx"));
+const SupportTicketChatPage = lazy(() => import("../pages/support/TicketChatPage.jsx"));
 
 function LazyPage({ children }) {
   return <Suspense fallback={<PageSkeleton />}>{children}</Suspense>;
@@ -101,6 +102,7 @@ const router = createBrowserRouter([
       { index: true, element: <LazyPage><SupportDashboard /></LazyPage> },
       { path: "/support/open", element: <LazyPage><SupportOpenTickets /></LazyPage> },
       { path: "/support/tickets", element: <LazyPage><SupportMyTickets /></LazyPage> },
+      { path: "/support/tickets/:ticketId", element: <LazyPage><SupportTicketChatPage /></LazyPage> },
     ],
   },
   { path: "*", element: <Navigate to="/" replace /> },
