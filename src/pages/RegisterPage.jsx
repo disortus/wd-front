@@ -14,6 +14,10 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
 
+  const passwordsMismatch =
+    Boolean(password) && Boolean(confirmPassword) && password !== confirmPassword;
+  const confirmPasswordError = passwordsMismatch ? "Пароли не совпадают" : "";
+
   useEffect(() => {
     clearError();
     return () => clearError();
@@ -34,13 +38,13 @@ export default function RegisterPage() {
       return;
     }
 
-    if (password !== confirmPassword) {
+    if (passwordsMismatch) {
       setFormError("Пароли не совпадают");
       return;
     }
 
     setLoading(true);
-    const result = await register(fullname, phone, password);
+    const result = await register(fullname, phone, password, confirmPassword);
     setLoading(false);
 
     if (result.success) {
@@ -104,6 +108,7 @@ export default function RegisterPage() {
             type="password"
             placeholder="••••••••"
             value={confirmPassword}
+            error={confirmPasswordError}
             onChange={(e) => {
               setConfirmPassword(e.target.value);
               if (formError) setFormError("");
@@ -111,7 +116,9 @@ export default function RegisterPage() {
             }}
             autoComplete="new-password"
           />
-          <Button fullWidth loading={loading}>Зарегистрироваться</Button>
+          <Button fullWidth loading={loading} disabled={passwordsMismatch}>
+            Зарегистрироваться
+          </Button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-500">

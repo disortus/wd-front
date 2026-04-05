@@ -108,7 +108,7 @@ const useAuthStore = create((set, get) => ({
     }
   },
 
-  register: async (fullname, phone, password) => {
+  register: async (fullname, phone, password, confirmPassword) => {
     set({
       isLoading: true,
       error: null,
@@ -119,6 +119,7 @@ const useAuthStore = create((set, get) => ({
         fullname,
         phone,
         password,
+        confirmPassword,
       });
 
       const { data } = await profileApi.getMe();
