@@ -1,6 +1,19 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const normalizeApiUrl = (rawUrl) => {
+  const fallbackUrl = "http://localhost:5000/api";
+  const url = (rawUrl || fallbackUrl).trim().replace(/\/+$/, "");
+
+  if (!url) return fallbackUrl;
+
+  if (/\/api$/i.test(url)) {
+    return url;
+  }
+
+  return `${url}/api`;
+};
+
+const API_URL = normalizeApiUrl(import.meta.env.VITE_API_URL);
 export const AUTH_STORAGE_KEY = "wd-front-token";
 
 export const getAuthToken = () => {
