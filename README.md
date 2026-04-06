@@ -1,18 +1,221 @@
-# React + Vite
+# wd-front — Frontend E-commerce приложения
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Современный React-фронтенд для интернет-магазина Apple-техники с полноценной системой управления заказами, поддержкой пользователей и ролевой системой доступа.
 
-Currently, two official plugins are available:
+## 🛠 Технологический стек
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Категория | Технология |
+|-----------|------------|
+| **Фреймворк** | React 19 |
+| **Сборщик** | Vite 8 |
+| **Роутинг** | React Router DOM 7 |
+| **Стили** | Tailwind CSS 4 |
+| **Состояние** | Zustand |
+| **HTTP-клиент** | Axios |
+| **Валидация** | React Hook Form + Zod |
+| **Уведомления** | React Hot Toast |
+| **UI-иконки** | Lucide React |
+| **Линтинг** | ESLint |
 
-## React Compiler
+## 📁 Структура проекта
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+```
+src/
+├── api/                    # API-клиенты для взаимодействия с бэкендом
+│   ├── admin.js           # Административные endpoints
+│   ├── auth.js            # Аутентификация
+│   ├── cart.js            # Корзина
+│   ├── client.js          # Базовый axios-клиент с интерцепторами
+│   ├── courier.js         # Курьерские операции
+│   ├── moderator.js       # Модераторские операции
+│   ├── orders.js          # Заказы
+│   ├── products.js        # Товары
+│   ├── profile.js         # Профиль пользователя
+│   └── support.js         # Тикеты поддержки
+│
+├── components/            # Переиспользуемые компоненты
+│   ├── ui/               # Базовые UI-компоненты
+│   ├── skeletons/        # Компоненты загрузки
+│   ├── system/           # Системные компоненты (ErrorBoundary)
+│   ├── feedback/         # Компоненты обратной связи
+│   ├── Header.jsx        # Шапка сайта
+│   ├── MobileNav.jsx     # Мобильная навигация
+│   ├── ProductCard.jsx   # Карточка товара
+│   └── ProtectedRoute.jsx # Защищённый роут
+│
+├── layouts/              # Макеты страниц
+│   ├── MainLayout.jsx    # Основной макет (публичные страницы)
+│   ├── PanelLayout.jsx   # Панельный макет (админка/кабинеты)
+│   └── Header.jsx        # Компонент шапки
+│
+├── pages/                # Страницы приложения
+│   ├── HomePage.jsx      # Главная страница
+│   ├── ProductsPage.jsx  # Каталог товаров
+│   ├── ProductDetailPage.jsx # Карточка товара
+│   ├── CatalogPage.jsx   # Страница категорий
+│   ├── CartPage.jsx      # Корзина
+│   ├── CheckoutPage.jsx  # Оформление заказа
+│   ├── LoginPage.jsx     # Вход
+│   ├── RegisterPage.jsx  # Регистрация
+│   ├── ProfilePage.jsx   # Профиль пользователя
+│   ├── ProfileOrdersPage.jsx # Заказы пользователя
+│   ├── ProfileOrderTrackingPage.jsx # Отслеживание заказа
+│   ├── ProfileTicketsPage.jsx # Обращения пользователя
+│   ├── CreateSupportTicketPage.jsx # Создание тикета
+│   │
+│   ├── admin/            # Панель администратора
+│   │   ├── DashboardPage.jsx    # Дашборд с аналитикой
+│   │   ├── Users.jsx            # Управление пользователями
+│   │   ├── Staff.jsx            # Управление персоналом
+│   │   ├── Catalog.jsx          # Управление категориями
+│   │   └── Products.jsx         # Управление товарами
+│   │
+│   ├── moderator/        # Панель модератора
+│   │   ├── Dashboard.jsx
+│   │   ├── Orders.jsx
+│   │   └── Products.jsx
+│   │
+│   ├── courier/          # Панель курьера
+│   │   ├── Dashboard.jsx
+│   │   └── Orders.jsx
+│   │
+│   ├── support/         # Панель поддержки
+│   │   ├── Dashboard.jsx
+│   │   ├── OpenTickets.jsx
+│   │   ├── MyTickets.jsx
+│   │   └── TicketChatPage.jsx
+│   │
+│   └── developer/       # Панель разработчика
+│       └── DeveloperPanelPage.jsx
+│
+├── store/                # Zustand-сторы
+│   ├── authStore.js      # Аутентификация и пользователь
+│   └── cartStore.js     # Корзина
+│
+├── hooks/                # Кастомные хуки
+│   └── useAuth.js       # Хук для работы с авторизацией
+│
+├── router/               # Конфигурация роутинга
+│   └── index.jsx        # Все маршруты приложения
+│
+├── types/                # Типы и константы
+│   └── index.js         # Роли, статусы заказов, тикетов
+│
+├── utils/                # Утилиты
+│   └── format.js        # Форматирование (валюта, даты)
+│
+├── constants/            # Константы приложения
+│   └── catalog.js       # Каталожные константы
+│
+├── main.jsx             # Точка входа
+├── App.jsx              # Корневой компонент
+└── index.css            # Глобальные стили
+```
 
-Note: This will impact Vite dev & build performances.
+## 🎯 Ролевая система
 
-## Expanding the ESLint configuration
+Приложение поддерживает **6 ролей пользователей**:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+| Роль | Путь | Описание |
+|------|------|-----------|
+| `user` | `/profile` | Клиент магазина |
+| `admin` | `/admin` | Полное управление системой |
+| `moderator` | `/moderator` | Управление заказами и товарами |
+| `courier` | `/courier` | Доставка заказов |
+| `support` | `/support` | Обработка тикетов поддержки |
+| `developer` | `/developer` | Панель разработчика |
+
+## 🚀 Запуск проекта
+
+### Установка зависимостей
+
+```bash
+npm install
+```
+
+### Запуск в режиме разработки
+
+```bash
+npm run dev
+```
+
+Приложение будет доступно по адресу `http://localhost:5173`
+
+### Сборка для продакшена
+
+```bash
+npm run build
+```
+
+### Предпросмотр сборки
+
+```bash
+npm run preview
+```
+
+## ⚙️ Настройка окружения
+
+Создайте файл `.env` в корне проекта:
+
+```env
+# Локальный бэкенд (по умолчанию)
+VITE_API_URL="http://localhost:5000/api"
+
+# Или продакшен-бэкенд
+# VITE_API_URL="https://your-backend-url.com/api"
+```
+
+## 📝 Основные функции
+
+### Для клиентов
+- 📱 Просмотр каталога товаров (смартфоны, наушники, часы)
+- 🔍 Поиск и фильтрация товаров
+- 🛒 Добавление товаров в корзину
+- 📦 Оформление заказа
+- 👤 Личный кабинет (профиль, заказы, обращения)
+- 🎫 Создание тикетов поддержки
+- 📍 Отслеживание статуса заказа
+
+### Для администраторов
+- 📊 Дашборд с аналитикой продаж
+- 👥 Управление пользователями
+- 👨‍💼 Управление персоналом (создание/удаление сотрудников)
+- 📂 Управление категориями товаров
+- 📱 Управление товарами (CRUD)
+
+### Для модераторов
+- 📋 Обработка заказов
+- 📦 Управление складом (товары на складе)
+
+### Для курьеров
+- 🚴 Просмотр доступных заказов
+- 📦 Управление своими доставками
+- ✅ Отметка о доставке
+
+### Для поддержки
+- 🎫 Работа с тикетами пользователей
+- 💬 Чат с клиентами
+
+## 🎨 Дизайн-система
+
+Проект использует **Tailwind CSS 4** с кастомной темой:
+
+- **Цвета**: primary (#111111), secondary (#6b6b6b), border (#e5e5e5), surface (#f7f7f7)
+- **Скругления**: xl (14px), 2xl (20px)
+- **Максимальная ширина контейнера**: 1280px
+- **Тени**: card (0 1px 2px rgba(0,0,0,0.04))
+
+## 📦 API-клиент
+
+Базовый API-клиент (`src/api/client.js`) включает:
+- Автоматическое добавление токена в заголовки
+- Обработка 401-ошибок (автоматический logout)
+- Нормализация URL API
+
+## 🔐 Аутентификация
+
+Используется JWT-токен с хранением в localStorage. Автоматическая проверка при загрузке приложения через `authStore.initialize()`.
+
+## 📄 Лицензия
+
+MIT
