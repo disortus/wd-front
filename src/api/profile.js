@@ -7,6 +7,9 @@ export const profileApi = {
   // PATCH /api/profile/me
   updateMe: (data) => client.patch("/public/profile/me", data),
 
+  // PATCH /api/profile/email
+  updateEmail: (email) => client.patch("/public/profile/email", { email }),
+
   // GET /api/profile/orders
   getOrderHistory: (params = {}) => client.get("/public/profile/orders", { params }),
 

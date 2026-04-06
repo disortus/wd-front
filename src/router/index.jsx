@@ -23,8 +23,9 @@ const ProfileTicketsPage = lazy(() => import("../pages/ProfileTicketsPage.jsx"))
 const ProfileTicketChatPage = lazy(() => import("../pages/ProfileTicketChatPage.jsx"));
 const CreateSupportTicketPage = lazy(() => import("../pages/CreateSupportTicketPage.jsx"));
 
-const AdminDashboard = lazy(() => import("../pages/admin/Dashboard.jsx"));
+const AdminDashboard = lazy(() => import("../pages/admin/DashboardPage.jsx"));
 const AdminUsers = lazy(() => import("../pages/admin/Users.jsx"));
+const AdminStaff = lazy(() => import("../pages/admin/Staff.jsx"));
 const AdminCatalog = lazy(() => import("../pages/admin/Catalog.jsx"));
 const AdminProducts = lazy(() => import("../pages/admin/Products.jsx"));
 
@@ -39,6 +40,8 @@ const SupportDashboard = lazy(() => import("../pages/support/Dashboard.jsx"));
 const SupportOpenTickets = lazy(() => import("../pages/support/OpenTickets.jsx"));
 const SupportMyTickets = lazy(() => import("../pages/support/MyTickets.jsx"));
 const SupportTicketChatPage = lazy(() => import("../pages/support/TicketChatPage.jsx"));
+
+const DeveloperPanel = lazy(() => import("../pages/developer/DeveloperPanelPage.jsx"));
 
 function LazyPage({ children }) {
   return <Suspense fallback={<PageSkeleton />}>{children}</Suspense>;
@@ -73,6 +76,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <LazyPage><AdminDashboard /></LazyPage> },
       { path: "/admin/users", element: <LazyPage><AdminUsers /></LazyPage> },
+      { path: "/admin/staff", element: <LazyPage><AdminStaff /></LazyPage> },
       { path: "/admin/catalog", element: <LazyPage><AdminCatalog /></LazyPage> },
       { path: "/admin/products", element: <LazyPage><AdminProducts /></LazyPage> },
     ],
@@ -103,6 +107,13 @@ const router = createBrowserRouter([
       { path: "/support/open", element: <LazyPage><SupportOpenTickets /></LazyPage> },
       { path: "/support/tickets", element: <LazyPage><SupportMyTickets /></LazyPage> },
       { path: "/support/tickets/:ticketId", element: <LazyPage><SupportTicketChatPage /></LazyPage> },
+    ],
+  },
+  {
+    path: "/developer",
+    element: <ProtectedRoute requireRole={ROLES.DEVELOPER}><PanelLayout /></ProtectedRoute>,
+    children: [
+      { index: true, element: <LazyPage><DeveloperPanel /></LazyPage> },
     ],
   },
   { path: "*", element: <Navigate to="/" replace /> },

@@ -10,6 +10,7 @@ import {
   TICKET_STATUS_COLORS,
 } from "../types/index.js";
 import { formatCurrency, formatDate } from "../utils/format.js";
+import { useAuthStore } from "../store/authStore.js";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -17,7 +18,15 @@ export default function ProfilePage() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("profile");
+  const [editingName, setEditingName] = useState(false);
+  const [editingEmail, setEditingEmail] = useState(false);
+  const [nameValue, setNameValue] = useState("");
+  const [emailValue, setEmailValue] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+  const setUserData = useAuthStore((state) => state.setUser);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,6 +47,53 @@ export default function ProfilePage() {
     };
     fetchData();
   }, []);
+
+  const handleSaveName = async () => {
+    if (!nameValue.trim()) {
+      setError("Имя не может быть пустым");
+      return;
+    }
+    setSaving(true);
+    setError("");
+    try {
+      const res = await profileApi.updateMe({ fullname: nameValue.trim() });
+      setUser(res.data.data);
+      setUserData(res.data.data);
+      setEditingName(false);
+      setSuccess("Имя успешно изменено");
+      setTimeout(() => setSuccess(""), 3000);
+    } catch (err) {
+      setError(err.response?.data?.message || "Ошибка при сохранении");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSaveEmail = async () => {
+    if (!emailValue.trim()) {
+      setError("Email не может быть пустым");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailValue)) {
+      setError("Некорректный формат email");
+      return;
+    }
+    setSaving(true);
+    setError("");
+    try {
+      const res = await profileApi.updateEmail(emailValue.trim());
+      setUser(res.data.data);
+      setUserData(res.data.data);
+      setEditingEmail(false);
+      setSuccess("Email успешно изменен");
+      setTimeout(() => setSuccess(""), 3000);
+    } catch (err) {
+      setError(err.response?.data?.message || "Ошибка при сохранении");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -64,6 +120,18 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Success/Error Messages */}
+      {success && (
+        <div className="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-xl">
+          {success}
+        </div>
+      )}
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl">
+          {error}
+        </div>
+      )}
+
       <div className="rounded-3xl border border-neutral-200 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-700 text-white p-6 sm:p-8 mb-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="flex items-center gap-4">
@@ -73,7 +141,7 @@ export default function ProfilePage() {
             <div>
               <p className="text-white/80 text-sm">Личный кабинет</p>
               <h1 className="text-2xl sm:text-3xl font-semibold mt-0.5">{user?.fullname || "Пользователь"}</h1>
-              <p className="text-sm text-white/80 mt-1">{user?.email}</p>
+              <p className="text-sm text-white/80 mt-1">{user?.email || "Email не указан"}</p>
             </div>
           </div>
 
@@ -136,26 +204,125 @@ export default function ProfilePage() {
           <h2 className="text-lg font-semibold mb-5">Данные профиля</h2>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* ФИО - редактируемое */}
             <div className="rounded-xl bg-neutral-50 border border-neutral-200 p-4">
-              <p className="text-xs text-gray-500 mb-1">ФИО</p>
-              <p className="font-medium">{user?.fullname || "Не указано"}</p>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs text-gray-500">ФИО</p>
+                {!editingName ? (
+                  <button
+                    onClick={() => {
+                      setNameValue(user?.fullname || "");
+                      setEditingName(true);
+                      setError("");
+                    }}
+                    className="text-xs text-blue-600 hover:text-blue-800"
+                  >
+                    Изменить
+                  </button>
+                ) : (
+                  <div className="flex gap-1">
+                    <button
+                      onClick={handleSaveName}
+                      disabled={saving}
+                      className="text-xs text-green-600 hover:text-green-800 disabled:opacity-50"
+                    >
+                      {saving ? "..." : "Сохранить"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditingName(false);
+                        setError("");
+                      }}
+                      className="text-xs text-gray-500 hover:text-gray-700"
+                    >
+                      Отмена
+                    </button>
+                  </div>
+                )}
+              </div>
+              {editingName ? (
+                <input
+                  type="text"
+                  value={nameValue}
+                  onChange={(e) => setNameValue(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Введите ФИО"
+                  autoFocus
+                />
+              ) : (
+                <p className="font-medium">{user?.fullname || "Не указано"}</p>
+              )}
             </div>
+
+            {/* Email - редактируемое */}
             <div className="rounded-xl bg-neutral-50 border border-neutral-200 p-4">
-              <p className="text-xs text-gray-500 mb-1">Email</p>
-              <p className="font-medium break-words">{user?.email || "Не указан"}</p>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-xs text-gray-500">Email</p>
+                {!editingEmail ? (
+                  <button
+                    onClick={() => {
+                      setEmailValue(user?.email || "");
+                      setEditingEmail(true);
+                      setError("");
+                    }}
+                    className="text-xs text-blue-600 hover:text-blue-800"
+                  >
+                    {user?.email ? "Изменить" : "Указать"}
+                  </button>
+                ) : (
+                  <div className="flex gap-1">
+                    <button
+                      onClick={handleSaveEmail}
+                      disabled={saving}
+                      className="text-xs text-green-600 hover:text-green-800 disabled:opacity-50"
+                    >
+                      {saving ? "..." : "Сохранить"}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setEditingEmail(false);
+                        setError("");
+                      }}
+                      className="text-xs text-gray-500 hover:text-gray-700"
+                    >
+                      Отмена
+                    </button>
+                  </div>
+                )}
+              </div>
+              {editingEmail ? (
+                <input
+                  type="email"
+                  value={emailValue}
+                  onChange={(e) => setEmailValue(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Введите email"
+                  autoFocus
+                />
+              ) : (
+                <p className="font-medium break-words">{user?.email || "Не указан"}</p>
+              )}
             </div>
+
+            {/* Телефон - только чтение */}
             <div className="rounded-xl bg-neutral-50 border border-neutral-200 p-4">
               <p className="text-xs text-gray-500 mb-1">Телефон</p>
               <p className="font-medium">{user?.phone || "Не указан"}</p>
             </div>
+
+            {/* Роль */}
             <div className="rounded-xl bg-neutral-50 border border-neutral-200 p-4">
               <p className="text-xs text-gray-500 mb-1">Роль</p>
               <Badge color="blue">{roleLabel}</Badge>
             </div>
+
+            {/* Открытых заказов */}
             <div className="rounded-xl bg-neutral-50 border border-neutral-200 p-4">
               <p className="text-xs text-gray-500 mb-1">Открытых заказов</p>
               <p className="font-medium">{activeOrders}</p>
             </div>
+
+            {/* Всего обращений */}
             <div className="rounded-xl bg-neutral-50 border border-neutral-200 p-4">
               <p className="text-xs text-gray-500 mb-1">Всего обращений</p>
               <p className="font-medium">{totalTickets}</p>

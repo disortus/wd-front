@@ -33,7 +33,7 @@ export default function AdminUsers() {
   const onToggleUser = async (id) => {
     setProcessingId(id);
     try {
-      await adminApi.toggleUser(id);
+      await adminApi.toggleUserActive(id);
       await fetchUsers();
     } catch (err) {
       setError(mapApiError(err, "Не удалось изменить статус пользователя"));

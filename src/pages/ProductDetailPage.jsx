@@ -4,6 +4,7 @@ import { productsApi } from "../api/products.js";
 import useCartStore from "../store/cartStore.js";
 import Button from "../components/ui/Button.jsx";
 import { Badge } from "../components/ui/index.js";
+import { getImageUrls } from "../utils/format.js";
 
 export default function ProductDetailPage() {
   const { slug } = useParams();
@@ -14,6 +15,10 @@ export default function ProductDetailPage() {
   const [error, setError] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [adding, setAdding] = useState(false);
+
+  // Computed image URLs
+  const productImages = getImageUrls(product?.images || []);
+  const mainImage = productImages[0] || null;
 
   const findProductBySlugFallback = useCallback(async (targetSlug) => {
     if (!targetSlug) return null;
@@ -103,9 +108,9 @@ export default function ProductDetailPage() {
         {/* Images */}
         <div>
           <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden">
-            {product.images?.[0] ? (
+            {mainImage ? (
               <img
-                src={product.images[0]}
+                src={mainImage}
                 alt={product.title}
                 className="w-full h-full object-cover"
               />
@@ -115,9 +120,9 @@ export default function ProductDetailPage() {
               </div>
             )}
           </div>
-          {product.images?.length > 1 && (
+          {productImages.length > 1 && (
             <div className="flex gap-2 mt-3">
-              {product.images.map((img, i) => (
+              {productImages.map((img, i) => (
                 <img
                   key={i}
                   src={img}

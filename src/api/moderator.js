@@ -34,4 +34,8 @@ export const moderatorApi = {
   // PATCH /api/moderator/products/:id/increase-stock
   increaseProductStock: (id, quantity) =>
     client.patch(`/moderator/products/${id}/increase-stock`, { quantity }),
+
+  // Analytics
+  // GET /api/moderator/analytics/sales
+  getSalesAnalytics: (params) => client.get("/moderator/analytics/sales", { params }),
 };

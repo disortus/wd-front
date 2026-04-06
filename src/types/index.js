@@ -5,6 +5,7 @@ export const ROLES = {
   MODERATOR: "moderator",
   COURIER: "courier",
   SUPPORT: "support",
+  DEVELOPER: "developer",
 };
 
 // Order status types (matching backend ORDER_STATUS_TYPES)
@@ -117,6 +118,9 @@ export const DASHBOARD_NAV = {
     { label: "Открытые тикеты", path: "/support/open" },
     { label: "Мои тикеты", path: "/support/tickets" },
   ],
+  [ROLES.DEVELOPER]: [
+    { label: "Панель разработчика", path: "/developer" },
+  ],
 };
 
 export const ROLE_LABELS = {
@@ -125,4 +129,5 @@ export const ROLE_LABELS = {
   [ROLES.MODERATOR]: "Модератор",
   [ROLES.COURIER]: "Курьер",
   [ROLES.SUPPORT]: "Поддержка",
+  [ROLES.DEVELOPER]: "Разработчик",
 };

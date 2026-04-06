@@ -1,19 +1,20 @@
 import { Link } from "react-router-dom";
 import Card from "./ui/Card.jsx";
-import { getProductSlug } from "../utils/format.js";
+import { getProductSlug, getImageUrl } from "../utils/format.js";
 
 export default function ProductCard({ product }) {
   const price = product.price;
   const slug = getProductSlug(product);
   const encodedSlug = slug ? encodeURIComponent(slug) : "";
+  const imageUrl = getImageUrl(product.images?.[0]);
 
   return (
     <Link to={encodedSlug ? `/products/${encodedSlug}` : "/products"}>
       <Card hover>
         <div className="aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
-          {product.images?.[0] ? (
+          {imageUrl ? (
             <img
-              src={product.images[0]}
+              src={imageUrl}
               alt={product.title}
               className="w-full h-full object-cover"
             />

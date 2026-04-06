@@ -172,3 +172,18 @@ export function Table({ columns, data, onRowClick, className }) {
     </div>
   );
 }
+
+export function Checkbox({ label, checked, onChange, disabled, className }) {
+  return (
+    <label className={clsx("flex items-center gap-2 cursor-pointer", disabled && "opacity-50 cursor-not-allowed", className)}>
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        disabled={disabled}
+        className="w-4 h-4 rounded border-gray-300 text-black focus:ring-black"
+      />
+      {label && <span className="text-sm text-gray-700">{label}</span>}
+    </label>
+  );
+}

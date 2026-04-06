@@ -25,14 +25,47 @@ export const mapApiError = (error, fallback = "Что-то пошло не та�
   return error?.response?.data?.message || error?.message || fallback;
 };
 
+// Базовый хост для изображений
+const IMAGE_HOST = "http://localhost:5000";
+
+// Преобразует путь к изображению в полный URL
+export const getImageUrl = (imagePath) => {
+  if (!imagePath) return null;
+  
+  // Если это уже полный URL, возвращаем как есть
+  if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+    return imagePath;
+  }
+  
+  // Если путь начинается с /imgs/, добавляем только хост
+  if (imagePath.startsWith("/imgs/")) {
+    return `${IMAGE_HOST}${imagePath}`;
+  }
+  
+  // Если путь начинается с imgs/, добавляем хост и /
+  if (imagePath.startsWith("imgs/")) {
+    return `${IMAGE_HOST}/${imagePath}`;
+  }
+  
+  // Иначе добавляем базовый путь
+  return `${IMAGE_HOST}/imgs/${imagePath}`;
+};
+
+// Преобразует массив путей к изображениям в массив полных URL
+export const getImageUrls = (images) => {
+  if (!Array.isArray(images)) return [];
+  return images.map((img) => getImageUrl(img)).filter(Boolean);
+};
+
 export const getProductImage = (product) => {
-  return (
+  const imagePath = 
     product?.images?.[0]
     || product?.image
     || product?.productSnapshot?.image
     || product?.productSnapshot?.images?.[0]
-    || null
-  );
+    || null;
+  
+  return imagePath ? getImageUrl(imagePath) : null;
 };
 
 export const getProductTitle = (product) => {
