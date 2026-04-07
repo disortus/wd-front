@@ -15,7 +15,7 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState({
-    street: "",
+    address: "",
     city: "",
     postalCode: "",
     country: "",
@@ -39,7 +39,7 @@ export default function CheckoutPage() {
     e.preventDefault();
     setError("");
 
-    if (!deliveryAddress.street || !deliveryAddress.city || !recipientName || !recipientPhone) {
+    if (!deliveryAddress.address || !deliveryAddress.city || !recipientName || !recipientPhone) {
       setError("Заполните все обязательные поля");
       return;
     }
@@ -91,8 +91,8 @@ export default function CheckoutPage() {
             />
             <Input
               label="Улица *"
-              value={deliveryAddress.street}
-              onChange={(e) => setDeliveryAddress({ ...deliveryAddress, street: e.target.value })}
+              value={deliveryAddress.address}
+              onChange={(e) => setDeliveryAddress({ ...deliveryAddress, address: e.target.value })}
               required
             />
             <Input
