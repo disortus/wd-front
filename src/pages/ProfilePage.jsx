@@ -10,7 +10,7 @@ import {
   TICKET_STATUS_COLORS,
 } from "../types/index.js";
 import { formatCurrency, formatDate } from "../utils/format.js";
-import { useAuthStore } from "../store/authStore.js";
+import useAuthStore from "../store/authStore.js";
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
